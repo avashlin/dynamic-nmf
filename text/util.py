@@ -13,7 +13,7 @@ def custom_tokenizer( s, min_term_length = 2 ):
 	"""
 	return [x.lower() for x in token_pattern.findall(s) if (len(x) >= min_term_length and x[0].isalpha() ) ]
 
-def preprocess( docs, stopwords, min_df = 3, min_term_length = 2, ngram_range = (1,1), apply_tfidf = True, apply_norm = True, tokenizer=custom_tokenizer ):
+def preprocess( docs, stopwords, min_df = 3,max_df=0.8, min_term_length = 2, ngram_range = (1,1), apply_tfidf = True, apply_norm = True, tokenizer=custom_tokenizer ):
 	"""
 	Preprocess a list containing text documents stored as strings.
 	"""
