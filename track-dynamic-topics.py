@@ -13,21 +13,52 @@ import unsupervised.nmf, unsupervised.rankings
 
 # --------------------------------------------------------------
 
-def main():
-	parser = OptionParser(usage="usage: %prog [options] dynamic_topics window_topics1 window_topics2...")
-	parser.add_option("-t", "--top", action="store", type="int", dest="top", help="number of top terms to display", default=10)
-	parser.add_option("-l","--long", action="store_true", dest="long_display", help="long format display")
-	parser.add_option("-d", "--dynamic", action="store", type="string", dest="dynamic_required", help="to view a subset of dynamic topics, specify one or more topic numbers comma separated", default=None)
-	(options, args) = parser.parse_args()
-	if( len(args) < 3 ):
-		parser.error( "Must specify at least a dynamic topic file, followed by two or more window topic files (in order of time window)" )
-	log.basicConfig(level=20, format='%(message)s')
+def get_options():
+    parser = OptionParser(usage="usage: %prog [options] dynamic_topics window_topics1 window_topics2...")
+    parser.add_option("-t", "--top", action="store", type="int", dest="top", help="number of top terms to display", default=10)
+    parser.add_option("-l","--long", action="store_true", dest="long_display", help="long format display")
+    parser.add_option("-d", "--dynamic", action="store", type="string", dest="dynamic_required", help="to view a subset of dynamic topics, specify one or more topic numbers comma separated", default=None)
+    parser.add_option("-o","--output", action="store",type="string",dest="output_path",help="output_file", default=None)
+    parser.add_option("-s","--selected_file", action="store",type="string",dest="selected_file",help="file containing the optimal number for k for different windows", default=None)
+    parser.add_option("-p","--pattern", action="store",type="string",dest="pattern",help="pattern to use for selecting the models to use", default=None)
+    
+    (options, args) = parser.parse_args()
+    if( len(args) < 3 ):
+        parser.error( "Must specify at least a dynamic topic file, followed by two or more window topic files (in order of time window)" )
+        
+    return options,args
+        
+    
+
+    
+
+def main(options,args):
+    
+    if options.selected_file is not None:
+        data = open(selected_file).readlines()
+        points = []
+        for line in data:
+            vals = line.split()
+            prefix = vals[0]
+            k = vals[1]
+            
+            if int(k) < 10:
+                name = prefix + "_windowtopics_k0"+k+".pkl"
+            else:
+                name = prefix + "_windowtopics_k"+k+".pkl"
+            files.append(name)
+
+    if options.output_path is None:
+        log.basicConfig(level=20, format='%(message)s')
+    else:
+        log.basicConfig(level=20, format="%(message)s",filename=options.output_path)
 
 	# Load dynamic results: (doc_ids, terms, term_rankings, partition, W, H, labels)
 	dynamic_in_path = args[0]
 	dynamic_res = unsupervised.nmf.load_nmf_results( dynamic_in_path )
 	dynamic_k = len(dynamic_res[2])
 	dynamic_term_rankings = unsupervised.rankings.truncate_term_rankings( dynamic_res[2], options.top )
+
 	log.info( "Loaded model with %d dynamic topics from %s" % (dynamic_k, dynamic_in_path) )
 
 	# Create a map of window topic label -> dynamic topic
@@ -107,5 +138,6 @@ def main():
 # --------------------------------------------------------------
 
 if __name__ == "__main__":
-	main()
+    options,args = get_options()
+	main(options,args)
  
