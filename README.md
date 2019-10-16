@@ -1,5 +1,8 @@
 # dynamic-nmf: Dynamic Topic Modeling
 
+## Repo Note
+This repo was forked from derekgreene/dynamic-nmf. My changes are relevant to the work I am doing and may not be modular or relevant. If you do come across this fork, use it with your own discretion, perhaps the original might serve you better
+
 ### Summary
 
 Standard topic modeling approaches assume the order of documents does not matter, making them unsuitable for time-stamped corpora. In contrast, *dynamic topic modeling* approaches track how language changes and topics evolve over time. We have developed a two-level approach for dynamic topic modeling via Non-negative Matrix Factorization (NMF), which links together topics identified in snapshots of text sources appearing over time.
