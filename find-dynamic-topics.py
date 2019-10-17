@@ -7,6 +7,7 @@ Sample usage:
 python find-dynamic-topics.py out/month1_windowtopics_k05.pkl out/month2_windowtopics_k08.pkl out/month3_windowtopics_k08.pkl -k 4,10 -o out -m out/w2v-model.bin 
 """
 import os, sys, random, operator
+import re
 import logging as log
 from optparse import OptionParser
 import numpy as np
@@ -94,8 +95,10 @@ def get_options():
     parser.add_option("-z","--log_file", action="store",type="string",dest="output_path",help="log file", default=None)
 
     (options, args) = parser.parse_args()
-    if( len(args) < 2 ):
-        parser.error( "Must specify at least two window topic files" )
+    
+# Dont need the following code since we are selecting models from file
+#     if( len(args) < 2 ):
+#         parser.error( "Must specify at least two window topic files" )
         
     return options,args
 
