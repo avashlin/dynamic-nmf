@@ -22,7 +22,7 @@ def preprocess( docs, stopwords, min_df = 3,max_df=0.8, min_term_length = 2, ngr
 		norm_function = "l2"
 	else:
 		norm_function = None
-	tfidf = TfidfVectorizer(stop_words=stopwords, lowercase=True, strip_accents="unicode", tokenizer=tokenizer, use_idf=apply_tfidf, norm=norm_function, min_df = min_df, ngram_range = ngram_range) 
+	tfidf = TfidfVectorizer(stop_words=stopwords, lowercase=True, strip_accents="unicode", tokenizer=tokenizer, use_idf=apply_tfidf, norm=norm_function, min_df = min_df,max_df=max_df, ngram_range = ngram_range) 
 	X = tfidf.fit_transform(docs)
 	terms = []
 	# store the vocabulary map
