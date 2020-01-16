@@ -6,6 +6,7 @@ Usage:
 python create-dynamic-partition.py -o out/dynamic-combined.pkl out/dynamictopics_k05.pkl out/month1_windowtopics_k05.pkl out/month2_windowtopics_k08.pkl out/month3_windowtopics_k08.pkl
 """
 import os, sys
+import re
 import logging as log
 from optparse import OptionParser
 from prettytable import PrettyTable
@@ -59,7 +60,7 @@ def main(options,args):
                 files.append(os.path.join(options.window_base_path,name))
 
                 
-    if options.output_path is None:
+    if options.log_file is None:
         log.basicConfig(level=20, format='%(message)s')
     else:
         log.basicConfig(level=20, format="%(message)s",filename=options.log_file)
