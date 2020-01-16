@@ -17,12 +17,13 @@ def main():
     parser = OptionParser(usage="usage: %prog [options] directory1 directory2 ...")
     parser.add_option("-s", action="store", type="string", dest="stoplist_file", help="custom stopword file path", default=None)
     parser.add_option("--df", action="store", type="int", dest="min_df", help="minimum number of documents for a term to appear", default=10)
-    parser.add_option("--minlen", action="store", type="int", dest="min_doc_length", help="minimum document length (in characters)", default=50)
+    parser.add_option("--minlen", action="store", type="int", dest="min_doc_length", help="minimum document length (in characters)", default=10)
     parser.add_option("-d","--dimensions", action="store", type="int", dest="dimensions", help="the dimensionality of the word vectors", default=100)
     parser.add_option("--window", action="store", type="int", dest="w2v_window", help="the maximum distance for Word2Vec to use between the current and predicted word within a sentence", default=5)
     parser.add_option("-o","--outdir", action="store", type="string", dest="dir_out", help="output directory (default is current directory)", default=None)
     parser.add_option("-m", action="store", type="string", dest="model_type", help="type of word embedding model to build (sg or cbow)", default="sg")
-    parser.add_option("-z","--log_file", action="store",type="string",dest="output_path",help="log file", default=None)
+    parser.add_option("-l","--log_file", action="store",type="string",dest="log_file",help="log file", default=None)
+    parser.add_option("-w","--workers", action="store",type="int",dest="workers",help="num workers to use", default=4)
 
     # Parse command line arguments
     (options, args) = parser.parse_args()
@@ -30,10 +31,10 @@ def main():
         parser.error( "Must specify at least one directory" )	
 
 
-    if options.output_path is None:
+    if options.log_file is None:
         log.basicConfig(level=20, format='%(message)s')
     else:
-        log.basicConfig(level=20, format="%(message)s",filename=options.output_path)
+        log.basicConfig(level=20, format="%(message)s",filename=options.log_file)
 
     if options.dir_out is None:
         dir_out = os.getcwd()
@@ -53,9 +54,9 @@ def main():
     # Build the Word2Vec model from the documents that we have found
     log.info( "Building Word2vec %s model..." % options.model_type )
     if options.model_type == "cbow":
-        model = gensim.models.Word2Vec(docgen, size=options.dimensions, min_count=options.min_df, window=options.w2v_window, workers=4, sg = 0)
+        model = gensim.models.Word2Vec(docgen, size=options.dimensions, min_count=options.min_df, window=options.w2v_window, workers=options.workers, sg = 0)
     elif options.model_type == "sg":
-        model = gensim.models.Word2Vec(docgen, size=options.dimensions, min_count=options.min_df, window=options.w2v_window, workers=4, sg = 1)
+        model = gensim.models.Word2Vec(docgen, size=options.dimensions, min_count=options.min_df, window=options.w2v_window, workers=options.workers, sg = 1)
     else:
         log.error("Unknown model type '%s'" % options.model_type )
         sys.exit(1)
